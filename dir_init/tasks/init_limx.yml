@@ -1,0 +1,11 @@
+- name: init_limx_dirs
+  hosts: all
+  sudo: True
+  tasks:
+    - name: init_limx_dirs
+      file:
+        state: directory
+        path: "/limx/src"
+        owner: root
+        group: root
+        mode: 0755

@@ -1,0 +1,24 @@
+- name: init_limx_java
+  hosts: all
+  sudo: True
+  vars:
+  - java_home: /limx/opt/java
+  - profile_home: /etc/profile.d/
+  tasks:
+    - name: mk_java_dir
+      file:
+        state: directory
+        path: "{{java_home}}"
+        owner: root
+        group: root
+        mode: 0755
+      async: 120
+      poll: 5
+    - name: tar_zxvf
+      command: tar -xvf /limx/src/jdk-8u144-linux-x64.tar.gz --strip-components 1 -C {{java_home}}
+      async: 180
+      poll: 5
+    - name: cp_java.sh
+      copy: src=java.sh dest={{profile_home}} mode=0600
+    - name: source java_home
+      shell: source /etc/profile.d/java.sh

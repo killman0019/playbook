@@ -1,0 +1,21 @@
+- name: init_limx_nfs
+  hosts: all
+  sudo: True
+  tasks:
+    - name: init_limx_src_dir
+      file:
+        state: directory
+        path: "/limx/src"
+        owner: root
+        group: root
+        mode: 0755
+    - name: yum install nfs-unit
+      yum: name=nfs-utils state=latest
+      async: 120
+      poll: 5
+    - name: yum install nfs-rpcbind
+      yum: name=rpcbind state=latest
+      async: 120
+      poll: 5
+    - name: mount nfs
+      command: mount -t nfs 192.168.0.201:/limx/src /limx/src
