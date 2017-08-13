@@ -1,0 +1,34 @@
+- name: init_limx_cassandra
+  hosts: all
+  sudo: True
+  vars:
+  - opt_home: /limx/opt/cassandra
+  - data_home: /limx/data/cassandra
+  - profile_home: /etc/profile.d/
+  tasks:
+    - name: mk_opt_dir
+      file: state=directory path="{{opt_home}}" owner=root group=root mode=0755
+      async: 120
+      poll: 5
+    - name: mk_data1_dir
+      file: state=directory path="{{data_home}}/datafile1" owner=root group=root mode=0755
+      async: 120
+      poll: 5
+    - name: mk_data2_dir
+      file: state=directory path="{{data_home}}/datafile2" owner=root group=root mode=0755
+      async: 120
+      poll: 5
+    - name: mk_saved_caches_dir
+      file: state=directory path="{{data_home}}/saved_caches" owner=root group=root mode=0755
+      async: 120
+      poll: 5
+    - name: mk_hints_dir
+      file: state=directory path="{{data_home}}/hints" owner=root group=root mode=0755
+      async: 120
+      poll: 5
+    - name: tar_zxvf
+      command: tar -xvf /limx/src/apache-cassandra-3.11.0-bin.tar.gz --strip-components 1 -C {{opt_home}}
+      async: 180
+      poll: 5
+    - name: cp_etc_file
+      copy: src=conf/cassandra.yaml dest={{opt_home}}/conf mode=0600
